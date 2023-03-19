@@ -88,7 +88,7 @@ const sketch = (p5: P5) => {
     slider = p5.createSlider(0, 4, 1, 0.2);
     slider.position(10, 10);
     slider.style("width", "80px");
-    p5.createCanvas(800, 800);
+    p5.createCanvas(800, 800, p5.WEBGL);
     // hint: shift the center points away from integer values!
     // and see how well the spheres reconstruct the shape!
     sdf.addShape(new Circle(6, 6, 3));
@@ -105,8 +105,11 @@ const sketch = (p5: P5) => {
     for (let i = 0; i < sdf.size(); ++i) {
       for (let j = 0; j < sdf.size(); ++j) {
         d = sdf.get(j, i);
-        gridpoint[0] = margin + j * gridscale;
-        gridpoint[1] = margin + i * gridscale;
+        // webgl coordinate system is centered on 0,0
+        // non-webgl coordinate system puts 0,0 at top left
+        const center = sdf.size() / 2;
+        gridpoint[0] = margin + (j - center) * gridscale;
+        gridpoint[1] = margin + (i - center) * gridscale;
 
         // black dot at grid point
         p5.stroke(0, 0, 0);
