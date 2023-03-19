@@ -19,6 +19,14 @@ class Circle implements IShape {
       this.r
     );
   }
+  bounds(): number[] {
+    return [
+      this.cx - this.r,
+      this.cy - this.r,
+      this.cx + this.r,
+      this.cy + this.r,
+    ];
+  }
 }
 
 class SDFGrid {
@@ -40,7 +48,9 @@ class SDFGrid {
   }
 
   // use coordinates relative to grid size
-  addShape(shape: IShape) {
+  // each shape will be considered opaque
+  // and not allowed to overlap with others
+  addShape(shape: IShape): boolean {
     // TODO intersection test against sdf!
     // maybe traverse a subgrid that only encompasses the
     // bounds of the circle and check for overlap with already
@@ -70,6 +80,7 @@ class SDFGrid {
         }
       }
     }
+    return true;
   }
 }
 
@@ -102,8 +113,14 @@ const sketch = (p5: P5) => {
     const gs = sdf.size();
     const center = gs / 2;
 
+    const black = p5.color(0, 0, 0);
+    const red = p5.color(255, 0, 0);
+    const blue = p5.color(0, 0, 255);
+
+    const circlescale = slider.value() as number;
+
     p5.noFill();
-    p5.stroke(0, 0, 0);
+    p5.stroke(black);
     for (let i = 0; i < gs; ++i) {
       for (let j = 0; j < gs; ++j) {
         // webgl coordinate system is centered on 0,0
@@ -125,14 +142,14 @@ const sketch = (p5: P5) => {
 
         // red or blue circle
         if (d > 0) {
-          p5.stroke(255, 0, 0);
+          p5.stroke(red);
         } else {
-          p5.stroke(0, 0, 255);
+          p5.stroke(blue);
         }
         p5.circle(
           gridpoint[0],
           gridpoint[1],
-          Math.abs(d * gridscale * (slider.value() as number))
+          Math.abs(d * gridscale * circlescale)
         );
       }
     }
