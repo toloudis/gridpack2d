@@ -99,21 +99,29 @@ const sketch = (p5: P5) => {
     p5.background(220);
     let d: number;
     const gridpoint = [0, 0];
+    const gs = sdf.size();
+    const center = gs / 2;
 
     p5.noFill();
-
-    for (let i = 0; i < sdf.size(); ++i) {
-      for (let j = 0; j < sdf.size(); ++j) {
-        d = sdf.get(j, i);
+    p5.stroke(0, 0, 0);
+    for (let i = 0; i < gs; ++i) {
+      for (let j = 0; j < gs; ++j) {
         // webgl coordinate system is centered on 0,0
         // non-webgl coordinate system puts 0,0 at top left
-        const center = sdf.size() / 2;
         gridpoint[0] = margin + (j - center) * gridscale;
         gridpoint[1] = margin + (i - center) * gridscale;
 
         // black dot at grid point
-        p5.stroke(0, 0, 0);
         p5.point(gridpoint[0], gridpoint[1]);
+      }
+    }
+    for (let i = 0; i < gs; ++i) {
+      for (let j = 0; j < gs; ++j) {
+        d = sdf.get(j, i);
+        // webgl coordinate system is centered on 0,0
+        // non-webgl coordinate system puts 0,0 at top left
+        gridpoint[0] = margin + (j - center) * gridscale;
+        gridpoint[1] = margin + (i - center) * gridscale;
 
         // red or blue circle
         if (d > 0) {
