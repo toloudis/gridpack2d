@@ -86,10 +86,12 @@ class SDFGrid {
 
 // Creating the sketch itself
 const sketch = (p5: P5) => {
-  const sdf = new SDFGrid(40);
+  p5.disableFriendlyErrors = true;
+
+  const sdf = new SDFGrid(60);
 
   // space between grid points on canvas
-  const gridscale = 20;
+  const gridscale = 13.333333;
   const margin = 20;
 
   let slider: P5.Element;
